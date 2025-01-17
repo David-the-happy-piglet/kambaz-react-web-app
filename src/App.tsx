@@ -6,9 +6,10 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 
-  return <h1>Welcome to David's World</h1>
-  /* (
+  return
+  (
     <>
+      <h1>Welcome to David's World</h1>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -30,7 +31,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  ) */
+  )
 }
 
 export default App
