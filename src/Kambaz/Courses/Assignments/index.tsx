@@ -24,6 +24,7 @@ export default function Assignments() {
                         href="#/Kambaz/Courses/5610/Assignments/A2">
                         A2 - CSS + BOOTSTRAP
                     </a>
+                    <br />
                     Multiple Modules | <b>Not available until</b> May.13 at 12:00am |
                     <br />
                     <b>Due </b>May.20 at 12:00am
@@ -34,6 +35,7 @@ export default function Assignments() {
                         href="#/Kambaz/Courses/5610/Assignments/A3">
                         A3 - JAVASCRIPT + REACT
                     </a>
+                    <br />
                     Multiple Modules | <b>Not available until</b> May.20 at 12:00am |
                     <br />
                     <b>Due </b>May.27 at 12:00am

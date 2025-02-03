@@ -3,6 +3,7 @@ import CoursesNavigation from "./CourseNavigation";
 import Assignments from "./Assignments";
 import Modules from "./Modules";
 import AssignmentEditor from "./Assignments/Editor";
+import Home from "./Home";
 
 export default function Courses() {
 
@@ -16,7 +17,7 @@ export default function Courses() {
                     <td valign="top">
                         <Routes>
                             <Route path="/" element={<Navigate to="Home" />} />
-                            <Route path="Home" element={<h2>Home</h2>} />
+                            <Route path="Home" element={<Home />} />
                             <Route path="Modules" element={<Modules />} />
 
                             <Route path="Assignments" element={<Assignments />} />

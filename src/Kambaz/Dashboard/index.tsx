@@ -20,6 +20,74 @@ export default function Dashboard() {
 
                 <hr />
 
+                <div className="wd-dashboard-course">
+                    <img src="/images/reactjs.jpg" width={200} />
+                    <div>
+                        <Link className="wd-dashboard-course-link"
+                            to="/Kambaz/Courses/5610/Home"> CS5610 Web Dev </Link>
+                        <p className="wd-dashboard-course-title">
+                            Full Stack software developer </p>
+                        <Link to="/Kambaz/Courses/5610/Home"> Go </Link>
+                    </div>
+                </div>
+                <hr />
+                <div className="wd-dashboard-course">
+                    <img src="/images/reactjs.jpg" width={200} />
+                    <div>
+                        <Link className="wd-dashboard-course-link"
+                            to="/Kambaz/Courses/5610/Home"> CS5610 Web Dev </Link>
+                        <p className="wd-dashboard-course-title">
+                            Full Stack software developer </p>
+                        <Link to="/Kambaz/Courses/5610/Home"> Go </Link>
+                    </div>
+                </div>
+                <hr />
+                <div className="wd-dashboard-course">
+                    <img src="/images/reactjs.jpg" width={200} />
+                    <div>
+                        <Link className="wd-dashboard-course-link"
+                            to="/Kambaz/Courses/5610/Home"> CS5610 Web Dev </Link>
+                        <p className="wd-dashboard-course-title">
+                            Full Stack software developer </p>
+                        <Link to="/Kambaz/Courses/5610/Home"> Go </Link>
+                    </div>
+                </div>
+                <hr />
+                <div className="wd-dashboard-course">
+                    <img src="/images/reactjs.jpg" width={200} />
+                    <div>
+                        <Link className="wd-dashboard-course-link"
+                            to="/Kambaz/Courses/5610/Home"> CS5610 Web Dev </Link>
+                        <p className="wd-dashboard-course-title">
+                            Full Stack software developer </p>
+                        <Link to="/Kambaz/Courses/5610/Home"> Go </Link>
+                    </div>
+                </div>
+                <hr />
+                <div className="wd-dashboard-course">
+                    <img src="/images/reactjs.jpg" width={200} />
+                    <div>
+                        <Link className="wd-dashboard-course-link"
+                            to="/Kambaz/Courses/5610/Home"> CS5610 Web Dev </Link>
+                        <p className="wd-dashboard-course-title">
+                            Full Stack software developer </p>
+                        <Link to="/Kambaz/Courses/5610/Home"> Go </Link>
+                    </div>
+                </div>
+                <hr />
+                <div className="wd-dashboard-course">
+                    <img src="/images/reactjs.jpg" width={200} />
+                    <div>
+                        <Link className="wd-dashboard-course-link"
+                            to="/Kambaz/Courses/5610/Home"> CS5610 Web Dev </Link>
+                        <p className="wd-dashboard-course-title">
+                            Full Stack software developer </p>
+                        <Link to="/Kambaz/Courses/5610/Home"> Go </Link>
+                    </div>
+                </div>
+                <hr />
+
+
 
                 <div className="wd-dashboard-course">
                     <img src="/images/algorithm.jpg" width={200} />

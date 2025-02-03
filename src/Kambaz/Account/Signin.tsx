@@ -11,7 +11,7 @@ export default function Signin() {
             password:
             <input placeholder="password" id="wd-password" type="password" />
             <br />
-            <Link to="/Kambaz/Account/Profile"
+            <Link to="/Kambaz/Dashboard"
                 id="wd-signin-btn">Sign in</Link>
             <br />
             <Link to="/Kambaz/Account/Signup"
