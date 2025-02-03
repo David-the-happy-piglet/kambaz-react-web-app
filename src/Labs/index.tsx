@@ -10,9 +10,8 @@ export default function Labs() {
             <hr />
             <h1>Labs</h1>
             <TOC />
+
             <Routes>
-
-
                 <Route path="Lab1/*" element={<Lab1 />} />
                 <Route path="Lab2/*" element={<Lab2 />} />
             </Routes>
