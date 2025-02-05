@@ -1,4 +1,4 @@
-import { Container, ListGroup } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import Borders from "./Borders";
 import Corners from "./Corners";
 import Dimensions from "./Dimensions";
