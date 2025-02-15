@@ -19,8 +19,8 @@ export default function Courses() {
 
                     <CoursesNavigation />
                 </div>
-                <div className="flex-fill"></div>
-                <div>
+
+                <div className="flex-fill">
                     <Routes>
                         <Route path="/" element={<Navigate to="Home" />} />
                         <Route path="Home" element={<Home />} />

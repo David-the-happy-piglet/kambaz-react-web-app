@@ -34,7 +34,7 @@ export default function Assignments() {
                                     </a>
                                     <br />
                                     Multiple Modules | <b>Not available until</b> May.6 at 12:00am |
-                                    <br />
+
                                     <b>Due </b>May.13 at 12:00am
                                 </Col>
                                 <Col xs={2} className="d-flex align-items-center">
@@ -57,7 +57,7 @@ export default function Assignments() {
                                     </a>
                                     <br />
                                     Multiple Modules | <b>Not available until</b> May.13 at 12:00am |
-                                    <br />
+
                                     <b>Due </b>May.20 at 12:00am
                                 </Col>
                                 <Col xs={2} className="d-flex align-items-center">
@@ -81,7 +81,7 @@ export default function Assignments() {
                                     </a>
                                     <br />
                                     Multiple Modules | <b>Not available until</b> May.20 at 12:00am |
-                                    <br />
+
                                     <b>Due </b>May.27 at 12:00am
                                 </Col>
                                 <Col xs={2} className="d-flex align-items-center">
