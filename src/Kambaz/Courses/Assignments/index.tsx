@@ -4,8 +4,14 @@ import { BsGripVertical } from "react-icons/bs";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import ControlButtons from "./ControlButtons";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
+import { Link, useParams } from "react-router";
+import * as db from "../../Database";
 
 export default function Assignments() {
+
+    const { cid } = useParams();
+    const assignments = db.assignments;
+
     return (
 
 
@@ -14,85 +20,39 @@ export default function Assignments() {
             <AssignmentsControls /><br />
 
             <ListGroup className="rounded-0" id="wd-assignments">
+
                 <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary"><BsGripVertical className="me-2 fs-3" /> ASSIGNMENTS <ControlButtons /></div>
 
-
                     <ListGroup className="wd-assignments rounded-0">
 
-                        <ListGroup.Item className="wd-assignment">
-                            <Row>
-                                <Col xs={2} className="d-flex align-items-center">
-                                    <BsGripVertical className="me-2 fs-3" />
-                                    <MdOutlineAssignmentTurnedIn />
-                                </Col>
+                        {assignments.filter((assignment: any) => assignment.course === cid).map((assignment: any) => (
 
-                                <Col xs={8}>
-                                    <a className="wd-assignment-link"
-                                        href="#/Kambaz/Courses/5610/Assignments/A1">
-                                        A1
-                                    </a>
-                                    <br />
-                                    Multiple Modules | <b>Not available until</b> May.6 at 12:00am |
 
-                                    <b>Due </b>May.13 at 12:00am
-                                </Col>
-                                <Col xs={2} className="d-flex align-items-center">
-                                    <AssignmentControlButtons />
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
 
-                        <ListGroup.Item className="wd-assignment">
-                            <Row>
-                                <Col xs={2} className="d-flex align-items-center">
-                                    <BsGripVertical className="me-2 fs-3" />
-                                    <MdOutlineAssignmentTurnedIn />
-                                </Col>
+                            <ListGroup.Item className="wd-assignment">
+                                <Row>
+                                    <Col xs={2} className="d-flex align-items-center">
+                                        <BsGripVertical className="me-2 fs-3" />
+                                        <MdOutlineAssignmentTurnedIn />
+                                    </Col>
 
-                                <Col xs={8}>
-                                    <a className="wd-assignment-link"
-                                        href="#/Kambaz/Courses/5610/Assignments/A2">
-                                        A2
-                                    </a>
-                                    <br />
-                                    Multiple Modules | <b>Not available until</b> May.13 at 12:00am |
+                                    <Col xs={8}>
+                                        <Link to={`/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}`}
+                                            className="wd-assignment-link"> {assignment.title} </Link>
 
-                                    <b>Due </b>May.20 at 12:00am
-                                </Col>
-                                <Col xs={2} className="d-flex align-items-center">
-                                    <AssignmentControlButtons />
 
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
+                                    </Col>
+                                    <Col xs={2} className="d-flex align-items-center">
+                                        <AssignmentControlButtons />
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
 
-                        <ListGroup.Item className="wd-assignment">
-                            <Row>
-                                <Col xs={2} className="d-flex align-items-center">
-                                    <BsGripVertical className="me-2 fs-3" />
-                                    <MdOutlineAssignmentTurnedIn />
-                                </Col>
 
-                                <Col xs={8}>
-                                    <a className="wd-assignment-link"
-                                        href="#/Kambaz/Courses/5610/Assignments/A3">
-                                        A3
-                                    </a>
-                                    <br />
-                                    Multiple Modules | <b>Not available until</b> May.20 at 12:00am |
-
-                                    <b>Due </b>May.27 at 12:00am
-                                </Col>
-                                <Col xs={2} className="d-flex align-items-center">
-                                    <AssignmentControlButtons />
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
+                        ))}
 
                     </ListGroup>
-
-
 
 
                 </ListGroup.Item>
