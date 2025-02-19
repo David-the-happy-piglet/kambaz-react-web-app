@@ -1,12 +1,17 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+
 
 export default function AssignmentEditor() {
+
+    const { aid } = useParams();
+
     return (
         <div id="wd-assignments-editor">
 
             <div className="mb-3">
                 <label htmlFor="wd-name">Assignment Name</label><br />
-                <input type="text" className="form-control" id="wd-name" value="A1"></input>
+                <input type="text" className="form-control" id="wd-name" value={aid} ></input>
             </div>
 
             <div className="mb-3">
