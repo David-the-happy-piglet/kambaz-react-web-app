@@ -5,7 +5,7 @@ import Modules from "./Modules";
 import AssignmentEditor from "./Assignments/Editor";
 import Home from "./Home";
 import { FaAlignJustify } from "react-icons/fa";
-import PeopleTable from "./People/table";
+import PeopleTable from "./People/Table";
 import { courses } from "../Database";
 
 export default function Courses() {
