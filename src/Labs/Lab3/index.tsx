@@ -31,54 +31,78 @@ import VariablesAndConstants from "./VariablesAndConstants";
 import VariableTypes from "./VariablesTypes";
 import Highlight from "./Highlight";
 import PathParameters from "./PathParameters";
+import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
+import { ListGroup } from "react-bootstrap";
+import store from "../store";
 
+function TodoSection() {
+    const { todos } = useSelector((state: any) => state.todosReducer);
+    return (
+        <ListGroup>
+            {todos.map((todo: any) => (
+                <ListGroup.Item key={todo.id}>
+                    {todo.title}
+                </ListGroup.Item>
+
+            ))}
+        </ListGroup>
+    );
+}
 export default function Lab3() {
+
+
     console.log('Hello World!');
     return (
-        <div id="wd-lab3">
-            <h3>Lab3</h3>
-            <VariablesAndConstants />
-            <VariableTypes />
-            <BooleanVariables />
-            <IfElse />
-            <TernaryOperator />
-            <ConditionalOutputIfElse />
-            <ConditionalOutputInline />
-            <LegacyFunctions />
-            <ArrowFunctions />
-            <ImpliedReturn />
-            <TemplateLiterals />
-            <SimpleArrays />
-            <ArrayIndexAndLength />
-            <AddingAndRemovingToFromArrays />
-            <ForLoops />
-            <MapFunction />
-            <FindFunction />
-            <FindIndex />
-            <FilterFunction />
-            <JsonStringify />
-            <House />
-            <TodoItem />
-            <TodoList />
-            <Spreading />
-            <Destructing />
-            <FunctionDestructing />
-            <DestructingImports />
-            <Classes />
-            <Styles />
+        <Provider store={store}>
+            <div id="wd-lab3">
+                <h3>Lab3</h3>
+                <TodoSection />
+                <hr />
 
-            <Add a={3} b={4} />
-            <h4>Square of 4</h4>
-            <Square>4</Square>
-            <hr />
+                <VariablesAndConstants />
+                <VariableTypes />
+                <BooleanVariables />
+                <IfElse />
+                <TernaryOperator />
+                <ConditionalOutputIfElse />
+                <ConditionalOutputInline />
+                <LegacyFunctions />
+                <ArrowFunctions />
+                <ImpliedReturn />
+                <TemplateLiterals />
+                <SimpleArrays />
+                <ArrayIndexAndLength />
+                <AddingAndRemovingToFromArrays />
+                <ForLoops />
+                <MapFunction />
+                <FindFunction />
+                <FindIndex />
+                <FilterFunction />
+                <JsonStringify />
+                <House />
+                <TodoItem />
+                <TodoList />
+                <Spreading />
+                <Destructing />
+                <FunctionDestructing />
+                <DestructingImports />
+                <Classes />
+                <Styles />
 
-            <Highlight>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
-                vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
-            </Highlight>
+                <Add a={3} b={4} />
+                <h4>Square of 4</h4>
+                <Square>4</Square>
+                <hr />
+
+                <Highlight>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
+                    vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
+                </Highlight>
 
 
-            <PathParameters />
-        </div>
+                <PathParameters />
+            </div>
+        </Provider>
     )
 }
