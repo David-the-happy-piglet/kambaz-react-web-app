@@ -1,17 +1,23 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Button, Col, Form, FormControl, Row } from "react-bootstrap";
+// import { useParams } from "react-router-dom";
+import { updateAssignment } from "./reducer";
+import { Link, useParams } from "react-router-dom";
 
 
-export default function AssignmentEditor() {
+export default function AssignmentEditor({ assignmentTitle, setAssignmentTitle, addAssignment, updateAssignment }:
+    { assignmentTitle: string; setAssignmentTitle: (title: string) => void, addAssignment: () => void, updateAssignment: () => void }) {
+    const { cid, aid } = useParams();
 
-    const { aid } = useParams();
 
     return (
         <div id="wd-assignments-editor">
 
             <div className="mb-3">
                 <label htmlFor="wd-name">Assignment Name</label><br />
-                <input type="text" className="form-control" id="wd-name" value={aid} ></input>
+                {aid === "add" ? (<FormControl value={assignmentTitle} className="mb-2" onChange={(e) => setAssignmentTitle(e.target.value)} />) :
+                    (<FormControl value={cid} className="mb-2" onChange={(e) => setAssignmentTitle(e.target.value)} />)}
+
+                {/* <input type="text" className="form-control" id="wd-name" value={assignmentName} ></input> */}
             </div>
 
             <div className="mb-3">
@@ -104,12 +110,23 @@ export default function AssignmentEditor() {
 
 
                 <Form.Group as={Row} className="mb-3 wd-float-right">
-                    <Col>
-                        <Button variant="secondary" type="submit" >Cancel</Button>
-                    </Col>
+
 
                     <Col>
-                        <Button variant="danger" type="submit" >Save</Button>
+                        <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+                            <Button variant="secondary" type="submit" >Cancel</Button>
+                        </Link>
+                    </Col>
+
+
+                    <Col>
+                        <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+                            {aid === "add" ? (<Button variant="danger" type="submit" onClick={() => { addAssignment }} >Save</Button>)
+
+                                : (
+                                    <Button variant="danger" type="submit" onClick={() => { updateAssignment }} >Save</Button>)
+                            }
+                        </Link>
                     </Col>
                 </Form.Group>
 
