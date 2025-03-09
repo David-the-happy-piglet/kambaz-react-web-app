@@ -1,4 +1,4 @@
-import { Col, ListGroup, Row } from "react-bootstrap";
+import { Col, ListGroup, Row, Button } from "react-bootstrap";
 import AssignmentsControls from "./AssignmentsControls";
 import { BsGripVertical } from "react-icons/bs";
 import AssignmentControlButtons from "./AssignmentControlButtons";
@@ -7,7 +7,7 @@ import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import * as db from "../../Database";
 
-import { addAssignment, deleteAssignment, updateAssignment } from "./reducer";
+import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { isFaculty } from "../../Account/reducer";
@@ -20,6 +20,9 @@ export default function Assignments() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const dispatch = useDispatch();
+
+    console.log("Current assignments:", assignments);
+    console.log("Filtering for course:", cid);
 
     return (
 
@@ -50,10 +53,9 @@ export default function Assignments() {
                                         <Link to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
                                             className="wd-assignment-link"> {assignment.title} </Link>
 
-
                                     </Col>
                                     <Col xs={2} className="d-flex align-items-center">
-                                        <AssignmentControlButtons />
+                                        <AssignmentControlButtons assignmentID={assignment._id} deleteAssignment={(assignmentID) => { dispatch(deleteAssignment(assignmentID)) }} />
                                     </Col>
                                 </Row>
                             </ListGroup.Item>

@@ -12,15 +12,11 @@ import { addAssignment, updateAssignment } from "./Assignments/reducer";
 //import * as db from "../Database";
 
 export default function Courses({ courses }: { courses: any[] }) {
-
-    const { cid } = useParams();
+    const { aid, cid } = useParams();
     const { pathname } = useLocation();
-    const [assignmentTitle, setAssignmentTitle] = useState<any>({});
-    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-
+    const [assignmentTitle, setAssignmentTitle] = useState("");
     const dispatch = useDispatch();
     const course = courses.find((course) => course._id === cid);
-
 
     return (
         <div id="wd-courses">
@@ -30,7 +26,6 @@ export default function Courses({ courses }: { courses: any[] }) {
             <hr />
             <div className="d-flex">
                 <div className="d-none d-md-block">
-
                     <CoursesNavigation />
                 </div>
 
@@ -39,26 +34,44 @@ export default function Courses({ courses }: { courses: any[] }) {
                         <Route path="/" element={<Navigate to="Home" />} />
                         <Route path="Home" element={<Home />} />
                         <Route path="Modules" element={<Modules />} />
-
                         <Route path="Assignments" element={<Assignments />} />
-
-                        <Route path="Assignments/:aid" element={<AssignmentEditor
-                            assignmentTitle={assignmentTitle}
-
-                            setAssignmentTitle={setAssignmentTitle}
-                            addAssignment={() => { dispatch(addAssignment({ title: assignmentTitle, course: cid })) }}
-                            updateAssignment={() => { dispatch(updateAssignment({ title: assignmentTitle, course: cid })) }}
-                        />} />
-
-                        {/* <Route path="Assignments/add" element={<AssignmentEditor
-                            assignmentName={assignmentName}
-                            assignment={assignment}
-                            setAssignmentName={setAssignmentName}
-                            addAssignment={() => { dispatch(addAssignment({ name: assignmentName, course: cid })) }}
-                            updateAssignment={() => { dispatch(updateAssignment({ name: assignmentName, course: cid })) }}
-                        />} /> */}
-
-                        {/* <Route path="Assignments/add" element={<AssignmentEditor />} /> */}
+                        {/* <Route path="Assignments/add" element={
+                            <AssignmentEditor
+                                assignmentTitle={assignmentTitle}
+                                setAssignmentTitle={setAssignmentTitle}
+                                addAssignment={() => {
+                                    console.log("Adding assignment:", assignmentTitle);
+                                    dispatch(addAssignment({
+                                        title: assignmentTitle,
+                                        course: cid
+                                    }));
+                                }}
+                                updateAssignment={() => {
+                                    dispatch(updateAssignment({
+                                        title: assignmentTitle,
+                                        course: cid
+                                    }));
+                                }}
+                            />
+                        } /> */}
+                        <Route path="Assignments/:aid" element={
+                            <AssignmentEditor
+                                assignmentTitle={assignmentTitle}
+                                setAssignmentTitle={setAssignmentTitle}
+                                addAssignment={() => {
+                                    console.log("Adding assignment:", { title: assignmentTitle, course: cid });
+                                    dispatch(addAssignment({
+                                        title: assignmentTitle,
+                                        course: cid
+                                    }));
+                                }}
+                                updateAssignment={(updatedAssignment) => {
+                                    console.log("updating assignment:", updatedAssignment)
+                                    dispatch(updateAssignment(
+                                        updatedAssignment
+                                    ));
+                                }}
+                            />} />
                         <Route path="Zoom" element={<h2>Zoom</h2>} />
                         <Route path="Quizzes" element={<h2>Quizzes</h2>} />
                         <Route path="Grades" element={<h2>Grades</h2>} />
@@ -66,8 +79,6 @@ export default function Courses({ courses }: { courses: any[] }) {
                     </Routes>
                 </div>
             </div>
-
-
         </div>
     );
 }

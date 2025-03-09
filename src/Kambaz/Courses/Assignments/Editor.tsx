@@ -1,12 +1,16 @@
 import { Button, Col, Form, FormControl, Row } from "react-bootstrap";
 // import { useParams } from "react-router-dom";
-import { updateAssignment } from "./reducer";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { /* useDispatch, */ useSelector } from "react-redux";
 
 
 export default function AssignmentEditor({ assignmentTitle, setAssignmentTitle, addAssignment, updateAssignment }:
-    { assignmentTitle: string; setAssignmentTitle: (title: string) => void, addAssignment: () => void, updateAssignment: () => void }) {
+    { assignmentTitle: string; setAssignmentTitle: (title: string) => void, addAssignment: () => void, updateAssignment: (assignment: { _id: string, title: string, course: string }) => void }) {
     const { cid, aid } = useParams();
+    const navigate = useNavigate();
+    // const dispatch = useDispatch();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const assignment = assignments.find((assignment: any) => assignment._id === aid);
 
 
     return (
@@ -15,13 +19,13 @@ export default function AssignmentEditor({ assignmentTitle, setAssignmentTitle, 
             <div className="mb-3">
                 <label htmlFor="wd-name">Assignment Name</label><br />
                 {aid === "add" ? (<FormControl value={assignmentTitle} className="mb-2" onChange={(e) => setAssignmentTitle(e.target.value)} />) :
-                    (<FormControl value={cid} className="mb-2" onChange={(e) => setAssignmentTitle(e.target.value)} />)}
+                    (<FormControl defaultValue={assignment.title} className="mb-2" onChange={(e) => setAssignmentTitle(e.target.value)} />)}
 
                 {/* <input type="text" className="form-control" id="wd-name" value={assignmentName} ></input> */}
             </div>
 
             <div className="mb-3">
-                <textarea className="form-control" id="exampleFormControlTextarea1" value="The assignment is available online Submit a link to the landing page of yor Web Application on Netlify"></textarea>
+                <textarea className="form-control" id="exampleFormControlTextarea1" defaultValue="The assignment is available online Submit a link to the landing page of yor Web Application on Netlify"></textarea>
             </div>
 
             <br />
@@ -34,7 +38,7 @@ export default function AssignmentEditor({ assignmentTitle, setAssignmentTitle, 
                         Points
                     </Form.Label>
                     <Col sm={8}>
-                        <Form.Control type="number" value="100" />
+                        <Form.Control type="number" defaultValue="100" />
                     </Col>
                 </Form.Group>
 
@@ -91,17 +95,17 @@ export default function AssignmentEditor({ assignmentTitle, setAssignmentTitle, 
                     </Form.Label>
                     <Col sm={8}>
                         Assign to <br />
-                        <Form.Control type="text" value="Everyone" id="wd-assign-to" />
+                        <Form.Control type="text" defaultValue="Everyone" id="wd-assign-to" />
                         Due <br />
-                        <Form.Control type="date" value="Everyone" id="wd-due-date" />
+                        <Form.Control type="date" id="wd-due-date" />
                         <Row>
                             <Col sm={6}>
                                 Available from
-                                <Form.Control type="date" value="Everyone" id="wd-available-from" />
+                                <Form.Control type="date" id="wd-available-from" />
                             </Col>
                             <Col sm={6}>
                                 Until <br />
-                                <Form.Control type="date" value="Everyone" id="wd-available-until" />
+                                <Form.Control type="date" id="wd-available-until" />
                             </Col>
                         </Row>
                     </Col>
@@ -120,13 +124,28 @@ export default function AssignmentEditor({ assignmentTitle, setAssignmentTitle, 
 
 
                     <Col>
-                        <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
-                            {aid === "add" ? (<Button variant="danger" type="submit" onClick={() => { addAssignment }} >Save</Button>)
+
+                        <Button
+                            variant="danger"
+                            onClick={() => {
+                                aid === "add" ? addAssignment() : updateAssignment({
+                                    _id: aid || '',
+                                    title: assignmentTitle,
+                                    course: cid || ''
+                                });;
+                                navigate(`/Kambaz/Courses/${cid}/Assignments`);
+                            }}
+                        >
+                            Save
+                        </Button>
+
+                        {/* <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+                            {aid === "add" ? (<Button variant="danger" type="submit" onClick={()=>addAssignment} >Save</Button>)
 
                                 : (
-                                    <Button variant="danger" type="submit" onClick={() => { updateAssignment }} >Save</Button>)
+                                    <Button variant="danger" type="submit" onClick={updateAssignment} >Save</Button>)
                             }
-                        </Link>
+                        </Link> */}
                     </Col>
                 </Form.Group>
 
