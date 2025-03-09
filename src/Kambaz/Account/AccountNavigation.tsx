@@ -10,7 +10,7 @@ export default function AccountNavigation() {
         <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">
 
             {links.map((link) => (
-                <Link
+                <Link key={link}
                     to={`/Kambaz/Account/${link}`}
                     id={`wd-account-${link.toLowerCase()}-link`}
                     className={`list-group-item list-group-item-action border border-0 ${pathname.includes(link) ? "active" : ""}`}>

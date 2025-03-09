@@ -4489,6 +4489,189 @@ Glad we could help you resolve this issue! Let me know if you have any other que
 
 ---
 
+_**User**_
+
+Refactor the Assignments component as follows
+Using the example of deleting modules, add a Delete button or trash icon to the right of each assignment.
+Clicking Delete on an assignment pops up a dialog asking if you are sure you want to remove the assignment.
+Clicking Yes or Ok, dismisses the dialog, removes the assignment, and updates the Assignments screen without the deleted assignment.
+Clicking No or Cancel, dismisses the dialog without removing the assignment
+
+
+---
+
+_**Assistant**_
+
+I'll help you add a delete confirmation dialog for assignments. We'll use React Bootstrap's Modal component for the confirmation dialog.
+
+```typescript:src/Kambaz/Courses/Assignments/index.tsx
+import { Link, useParams } from "react-router-dom";
+import { Button, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAssignment } from "./reducer";
+import { FaTrash } from "react-icons/fa"; // Import trash icon
+import { useState } from "react";
+
+export default function Assignments() {
+    const { cid } = useParams();
+    const dispatch = useDispatch();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const [showDialog, setShowDialog] = useState(false);
+    const [selectedAssignment, setSelectedAssignment] = useState<any>(null);
+
+    const handleDelete = (assignment: any) => {
+        setSelectedAssignment(assignment);
+        setShowDialog(true);
+    };
+
+    const confirmDelete = () => {
+        if (selectedAssignment) {
+            dispatch(deleteAssignment(selectedAssignment._id));
+        }
+        setShowDialog(false);
+    };
+
+    return (
+        <div>
+            <div className="float-end">
+                <Link to={`/Kambaz/Courses/${cid}/Assignments/add`}>
+                    <Button>+ Assignment</Button>
+                </Link>
+            </div>
+            <div className="list-group">
+                {assignments
+                    .filter((assignment: any) => assignment.course === cid)
+                    .map((assignment: any) => (
+                        <div key={assignment._id} 
+                             className="list-group-item d-flex justify-content-between align-items-center">
+                            <Link
+                                to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+                                className="text-decoration-none text-black"
+                            >
+                                {assignment.title}
+                            </Link>
+                            <Button 
+                                variant="danger" 
+                                size="sm"
+                                onClick={() => handleDelete(assignment)}
+                            >
+                                <FaTrash />
+                            </Button>
+                        </div>
+                    ))}
+            </div>
+
+            {/* Confirmation Dialog */}
+            <Modal show={showDialog} onHide={() => setShowDialog(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete the assignment 
+                    "{selectedAssignment?.title}"?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowDialog(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={confirmDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
+    );
+}
+```
+
+Key changes made:
+1. Added imports for Modal, useState, and FaTrash icon
+2. Added state for managing the confirmation dialog and selected assignment
+3. Added handleDelete function to show the confirmation dialog
+4. Added confirmDelete function to handle the actual deletion
+5. Added a delete button with trash icon next to each assignment
+6. Added a Modal component for the confirmation dialog
+7. The dialog shows the assignment title and has Cancel/Delete buttons
+
+The flow is:
+1. User clicks the trash icon next to an assignment
+2. Confirmation dialog appears with the assignment title
+3. If user clicks Cancel, dialog closes with no changes
+4. If user clicks Delete, the assignment is removed and dialog closes
+5. The assignments list updates automatically through Redux
+
+Try it out and let me know if you need any adjustments!
+
+---
+
+_**User**_
+
+Warning: Each child in a list should have a unique "key" prop.
+
+Check the render method of `Assignments`. See https://reactjs.org/link/warning-keys for more information.
+ListGroupItem<@http://localhost:5173/node_modules/.vite/deps/react-bootstrap.js?v=b153c55d:7142:40
+Assignments@http://localhost:5173/src/Kambaz/Courses/Assignments/index.tsx?t=1741495492382:30:19
+RenderedRoute@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:5359:23
+Routes@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:6088:16
+div
+div
+div
+Courses@http://localhost:5173/src/Kambaz/Courses/index.tsx?t=1741495492382:29:32
+ProtectedRoute@http://localhost:5173/src/Kambaz/Account/ProtectedRoute.tsx:20:39
+RenderedRoute@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:5359:23
+Routes@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:6088:16
+div
+div
+Kambaz@http://localhost:5173/src/Kambaz/index.tsx?t=1741495492382:32:41
+RenderedRoute@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:5359:23
+Routes@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:6088:16
+div
+Provider@http://localhost:5173/node_modules/.vite/deps/react-redux.js?v=b153c55d:923:53
+Router@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:6031:16
+HashRouter@http://localhost:5173/node_modules/.vite/deps/chunk-ITILPUYH.js?v=b153c55d:8102:20
+App react-jsx-dev-runtime.development.js:87:29
+
+---
+
+_**Assistant**_
+
+This warning occurs because we need to add a unique key to each list item. Let's fix the Assignments component by using React Bootstrap's `ListGroup` and `ListGroupItem` components and ensuring each item has a unique key:
+
+```typescript:src/Kambaz/Courses/Assignments/index.tsx
+import { Link, useParams } from "react-router-dom";
+import { Button, Modal, ListGroup } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAssignment } from "./reducer";
+import { FaTrash } from "react-icons/fa";
+import { useState } from "react";
+
+export default function Assignments() {
+    const { cid } = useParams();
+    const dispatch = useDispatch();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const [showDialog, setShowDialog] = useState(false);
+    const [selectedAssignment, setSelectedAssignment] = useState<any>(null);
+
+    const handleDelete = (assignment: any) => {
+        setSelectedAssignment(assignment);
+        setShowDialog(true);
+    };
+
+    const confirmDelete = () => {
+        if (selectedAssignment) {
+            dispatch(deleteAssignment(selectedAssignment._id));
+        }
+        setShowDialog(false);
+    };
+
+    return (
+        <div>
+            <div className="float-end">
+                <Link to={`/Kambaz/Courses/${cid}/Assignments/add`}>
+                    
+
+---
+
 
 
 ---

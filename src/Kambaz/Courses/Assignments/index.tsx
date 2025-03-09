@@ -42,7 +42,7 @@ export default function Assignments() {
 
 
 
-                            <ListGroup.Item className="wd-assignment">
+                            <ListGroup.Item className="wd-assignment" key={assignment._id}>
                                 <Row>
                                     <Col xs={2} className="d-flex align-items-center">
                                         <BsGripVertical className="me-2 fs-3" />
@@ -54,6 +54,7 @@ export default function Assignments() {
                                             className="wd-assignment-link"> {assignment.title} </Link>
 
                                     </Col>
+
                                     <Col xs={2} className="d-flex align-items-center">
                                         <AssignmentControlButtons assignmentID={assignment._id} deleteAssignment={(assignmentID) => { dispatch(deleteAssignment(assignmentID)) }} />
                                     </Col>
