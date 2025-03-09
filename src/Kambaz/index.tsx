@@ -11,6 +11,7 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import * as db from "./Database";
 import ProtectedRoute from "./Account/ProtectedRoute";
+import ProtectedCourseRoute from "./Account/ProtectedCourseRoute";
 
 export default function Kambaz() {
 
@@ -46,15 +47,23 @@ export default function Kambaz() {
                 <Routes>
                     <Route path="/" element={<Navigate to="Account" />} />
                     <Route path="Account/*" element={<Account />} />
-                    <Route path="Dashboard/*" element={<ProtectedRoute><Dashboard
-                        courses={courses}
-                        course={course}
-                        setCourse={setCourse}
-                        addNewCourse={addNewCourse}
-                        deleteCourse={deleteCourse}
-                        updateCourse={updateCourse} />
-                    </ProtectedRoute>} />
-                    <Route path="Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>} />
+                    <Route path="Dashboard/*" element={
+                        <ProtectedRoute>
+                            <Dashboard
+                                courses={courses}
+                                course={course}
+                                setCourse={setCourse}
+                                addNewCourse={addNewCourse}
+                                deleteCourse={deleteCourse}
+                                updateCourse={updateCourse}
+                            />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="Courses/:cid/*" element={
+                        <ProtectedCourseRoute>
+                            <Courses courses={courses} />
+                        </ProtectedCourseRoute>
+                    } />
                     <Route path="Calendar/*" element={<Calendar />} />
                     <Route path="Mail/*" element={<Mail />} />
                 </Routes>

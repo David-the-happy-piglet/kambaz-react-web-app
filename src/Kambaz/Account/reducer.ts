@@ -15,4 +15,5 @@ export const { setCurrentUser } = accountSlice.actions;
 export default accountSlice.reducer;
 
 export const isFaculty = (currentUser: any) => currentUser?.role === "FACULTY";
+export const isStudent = (currentUser: any) => currentUser?.role === "STUDENT";
 

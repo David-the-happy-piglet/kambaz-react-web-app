@@ -4668,7 +4668,507 @@ export default function Assignments() {
         <div>
             <div className="float-end">
                 <Link to={`/Kambaz/Courses/${cid}/Assignments/add`}>
-                    
+                    <Button>+ Assignment</Button>
+                </Link>
+            </div>
+            <ListGroup>
+                {assignments
+                    .filter((assignment: any) => assignment.course === cid)
+                    .map((assignment: any) => (
+                        <ListGroup.Item 
+                            key={assignment._id}
+                            className="d-flex justify-content-between align-items-center"
+                        >
+                            <Link
+                                to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+                                className="text-decoration-none text-black"
+                            >
+                                {assignment.title}
+                            </Link>
+                            <Button 
+                                variant="danger" 
+                                size="sm"
+                                onClick={() => handleDelete(assignment)}
+                            >
+                                <FaTrash />
+                            </Button>
+                        </ListGroup.Item>
+                    ))}
+            </ListGroup>
+
+            <Modal show={showDialog} onHide={() => setShowDialog(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete the assignment 
+                    "{selectedAssignment?.title}"?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowDialog(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={confirmDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
+    );
+}
+```
+
+Key changes made:
+1. Imported `ListGroup` from react-bootstrap
+2. Changed `div` with class `list-group` to `ListGroup` component
+3. Changed `div` with class `list-group-item` to `ListGroup.Item` component
+4. Ensured the `key` prop is on the `ListGroup.Item` component
+
+This should resolve the warning while maintaining the same functionality. The key changes are:
+- Using proper React Bootstrap components
+- Ensuring the key is on the outermost component in the map function
+
+Try it now and the warning should be gone!
+
+---
+
+_**User**_
+
+Currently the Dashboard screen allows Faculty to Add, Delete, Edit, and Update courses, as well as navigate to the course's content. Other types of the users can only view the list of the courses they are enrolled in. Refactor the Dashboard screen so that if the current user's role is Student, they have a blue Enrollments button at the top right of the screen. Clicking the Enrollments button displays all the the courses. Clicking it again only shows the courses a student is enrolled in. Courses that the student is enrolled in should provide a red Unenroll button and courses that the student is not enrolled in should provide a green Enroll button. When a student click's the Unenroll or Enroll button the enrollment status must actually change and the buttons should toggle to reflect the new state. If a student signs out, and then signs in again, the enrollment choices should still persist. If a user refreshes or reloads the page, the new enrollments are lost. Protect the route to a course so that only students enrolled in that course can navigate to the course, and stay in the Dashboard screen otherwise. All enrollment related buttons should only be visible to students. Create new or modify existing reducers and store as needed.
+
+
+---
+
+_**Assistant**_
+
+I'll help you implement the enrollment functionality. We'll need to:
+1. Create a new enrollment reducer
+2. Add enrollment UI components
+3. Modify the Dashboard to handle enrollments
+4. Protect course routes based on enrollment
+
+First, let's create a new enrollment reducer:
+
+```typescript:src/Kambaz/Dashboard/enrollmentReducer.ts
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+    enrollments: [] as string[], // Array of course IDs that the student is enrolled in
+    showAllCourses: false
+};
+
+const enrollmentSlice = createSlice({
+    name: "enrollments",
+    initialState,
+    reducers: {
+        toggleEnrollment: (state, { payload: courseId }) => {
+            const index = state.enrollments.indexOf(courseId);
+            if (index === -1) {
+                state.enrollments.push(courseId);
+            } else {
+                state.enrollments.splice(index, 1);
+            }
+        },
+        toggleShowAllCourses: (state) => {
+            state.showAllCourses = !state.showAllCourses;
+        }
+    },
+});
+
+export const { toggleEnrollment, toggleShowAllCourses } = enrollmentSlice.actions;
+export default enrollmentSlice.reducer;
+```
+
+Now, let's modify the Dashboard component:
+
+```typescript:src/Kambaz/Dashboard/index.tsx
+import { useSelector, useDispatch } from "react-redux";
+import { Button } from "react-bootstrap";
+import { toggleEnrollment, toggleShowAllCourses } from "./enrollmentReducer";
+import { useNavigate } from "react-router-dom";
+
+export default function Dashboard({ courses }: { courses: any[] }) {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { enrollments, showAllCourses } = useSelector((state: any) => state.enrollmentReducer);
+    const isStudent = currentUser?.role === "STUDENT";
+
+    const handleCourseClick = (courseId: string) => {
+        if (!isStudent || enrollments.includes(courseId)) {
+            navigate(`/Kambaz/Courses/${courseId}`);
+        }
+    };
+
+    const displayedCourses = isStudent && !showAllCourses 
+        ? courses.filter(course => enrollments.includes(course._id))
+        : courses;
+
+    return (
+        <div>
+            {isStudent && (
+                <div className="d-flex justify-content-end mb-3">
+                    <Button 
+                        variant="primary"
+                        onClick={() => dispatch(toggleShowAllCourses())}
+                    >
+                        {showAllCourses ? "Show My Enrollments" : "Show All Courses"}
+                    </Button>
+                </div>
+            )}
+
+            <div className="list-group">
+                {displayedCourses.map((course: any) => (
+                    <div 
+                        key={course._id}
+                        className="list-group-item d-flex justify-content-between align-items-center"
+                        onClick={() => handleCourseClick(course._id)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <div>
+                            <h4>{course.number}</h4>
+                            <p className="mb-0">{course.name}</p>
+                        </div>
+                        
+                        {isStudent && (
+                            <Button
+                                variant={enrollments.includes(course._id) ? "danger" : "success"}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    dispatch(toggleEnrollment(course._id));
+                                }}
+                            >
+                                {enrollments.includes(course._id) ? "Unenroll" : "Enroll"}
+                            </Button>
+                        )}
+
+                        {currentUser?.role === "FACULTY" && (
+                            // ... existing faculty control buttons ...
+                        )}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+```
+
+Let's create a ProtectedCourseRoute component:
+
+```typescript:src/Kambaz/Account/ProtectedCourseRoute.tsx
+import { useSelector } from "react-redux";
+import { Navigate, useParams } from "react-router-dom";
+
+export default function ProtectedCourseRoute({ children }: { children: any }) {
+    const { cid } = useParams();
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
+    
+    const canAccess = 
+        currentUser?.role === "FACULTY" || 
+        (currentUser?.role === "STUDENT" && enrollments.includes(cid));
+
+    if (!canAccess) {
+        return <Navigate to="/Kambaz/Dashboard" />;
+    }
+    return children;
+}
+```
+
+Finally, update your store configuration to include the new reducer:
+
+```typescript:src/Kambaz/store.ts
+import enrollmentReducer from "./Dashboard/enrollmentReducer";
+
+const store = configureStore({
+    reducer: {
+        // ... other reducers ...
+        enrollmentReducer,
+    }
+});
+```
+
+And update your route configuration:
+
+```typescript:src/Kambaz/index.tsx
+import ProtectedCourseRoute from "./Account/ProtectedCourseRoute";
+
+// ... in your Routes ...
+<Route 
+    path="Courses/:cid/*" 
+    element={
+        <ProtectedCourseRoute>
+            <Courses courses={courses} />
+        </ProtectedCourseRoute>
+    } 
+/>
+```
+
+Key features implemented:
+1. Students see an Enrollments/Show All Courses toggle button
+2. Enroll/Unenroll buttons for each course
+3. Course access restricted to enrolled students
+4. Enrollment state persists during the session
+5. Faculty maintain full access to all courses
+6. Students can only view enrolled courses by default
+
+Let me know if you need any clarification or adjustments!
+
+---
+
+_**User**_
+
+can you make the changes for me?
+
+---
+
+_**Assistant**_
+
+I'll help you modify the Dashboard component to implement the enrollment functionality. Let's make the changes:
+
+```typescript:src/Kambaz/Dashboard/index.tsx
+import { Button, Card, Col, FormControl, Row } from "react-bootstrap";
+import { Form, Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import * as db from "../Database";
+import { isFaculty } from "../Account/reducer";
+import { toggleEnrollment, toggleShowAllCourses } from "./enrollmentReducer";
+
+export default function Dashboard({ courses, course, setCourse, addNewCourse,
+    deleteCourse, updateCourse }: {
+        courses: any[]; course: any; setCourse: (course: any) => void;
+        addNewCourse: () => void; deleteCourse: (course: any) => void;
+        updateCourse: () => void;
+    }) {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { enrollments, showAllCourses } = useSelector((state: any) => state.enrollmentReducer);
+    const isStudent = currentUser?.role === "STUDENT";
+
+    const handleCourseClick = (courseId: string) => {
+        if (!isStudent || enrollments.includes(courseId)) {
+            navigate(`/Kambaz/Courses/${courseId}/Home`);
+        }
+    };
+
+    const displayedCourses = isStudent && !showAllCourses 
+        ? courses.filter(course => enrollments.includes(course._id))
+        : courses;
+
+    return (
+        <div id="wd-dashboard">
+            <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+            
+            {/* Faculty Controls */}
+            {isFaculty(currentUser) && (
+                <>
+                    <h5>NewCourse
+                        <button className="btn btn-primary float-end" id="wd-add-new-course-click" onClick={addNewCourse}>Add</button>
+                        <button className="btn btn-warning float-end me-2"
+                            onClick={updateCourse} id="wd-update-course-click">
+                            Update
+                        </button>
+                    </h5>
+                    <FormControl value={course.name} className="mb-2" onChange={(e) => setCourse({ ...course, name: e.target.value })} />
+                    <FormControl as="textarea" value={course.description} rows={3} onChange={(e) => setCourse({ ...course, description: e.target.value })} />
+                    <hr />
+                </>
+            )}
+
+            {/* Student Enrollment Controls */}
+            {isStudent && (
+                <div className="d-flex justify-content-end mb-3">
+                    <Button 
+                        variant="primary"
+                        onClick={() => dispatch(toggleShowAllCourses())}
+                    >
+                        {showAllCourses ? "Show My Enrollments" : "Show All Courses"}
+                    </Button>
+                </div>
+            )}
+
+            <h2 id="wd-dashboard-published">Published Courses ({displayedCourses.length})</h2> <hr />
+
+            <div id="wd-dashboard-courses">
+                <Row xs={1} md={5} className="g-4">
+                    {displayedCourses.map((course) => (
+                        <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
+                            <Card>
+                                <div className="wd-dashboard-course-link text-decoration-none text-dark"
+                                     onClick={() => handleCourseClick(course._id)}
+                                     style={{ cursor: isStudent && !enrollments.includes(course._id) ? 'not-allowed' : 'pointer' }}>
+                                    <Card.Img variant="top" src="/images/reactjs.jpg" width="100%" height={160} />
+                                    <Card.Body className="card-body">
+                                        <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                                            {course.name}
+                                        </Card.Title>
+                                        <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
+                                            {course.description}
+                                        </Card.Text>
+                                        
+                                        {/* Student Enrollment Button */}
+                                        {isStudent && (
+                                            <Button
+                                                variant={enrollments.includes(course._id) ? "danger" : "success"}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    dispatch(toggleEnrollment(course._id));
+                                                }}
+                                            >
+                                                {enrollments.includes(course._id) ? "Unenroll" : "Enroll"}
+                                            </Button>
+                                        )}
+
+                                        {/* Faculty Controls */}
+                                        {isFaculty(currentUser) && (
+                                            <>
+                                                <button onClick={(event) => {
+                                                    event.preventDefault();
+                                                    deleteCourse(course._id);
+                                                }} className="btn btn-danger float-end"
+                                                    id="wd-delete-course-click">
+                                                    Delete
+                                                </button>
+
+                                                <button id="wd-edit-course-click"
+                                                    onClick={(event) => {
+                                                        event.preventDefault();
+                                                        setCourse(course);
+                                                    }}
+                                                    className="btn btn-warning me-2 float-end" >
+                                                    Edit
+                                                </button>
+                                            </>
+                                        )}
+                                    </Card.Body>
+                                </div>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            </div>
+        </div>
+    );
+}
+```
+
+Now let's create a `ProtectedCourseRoute` component:
+
+```typescript:src/Kambaz/Account/ProtectedCourseRoute.tsx
+import { useSelector } from "react-redux";
+import { Navigate, useParams } from "react-router-dom";
+import { isFaculty } from "./reducer";
+
+export default function ProtectedCourseRoute({ children }: { children: any }) {
+    const { cid } = useParams();
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
+    
+    if (!currentUser) {
+        return <Navigate to="/Kambaz/Account/SignIn" />;
+    }
+
+    const canAccess = 
+        isFaculty(currentUser) || 
+        (currentUser.role === "STUDENT" && enrollments.includes(cid));
+
+    if (!canAccess) {
+        return <Navigate to="/Kambaz/Dashboard" />;
+    }
+    
+    return children;
+}
+```
+
+Finally, update the routes in `Kambaz/index.tsx`:
+
+```typescript:src/Kambaz/index.tsx
+import ProtectedCourseRoute from "./Account/ProtectedCourseRoute";
+
+// ... rest of your imports ...
+
+export default function Kambaz() {
+    // ... existing code ...
+
+    return (
+        <div id="wd-kambaz">
+            <KambazNavigation />
+            <div className="wd-main-content-offset p-3">
+                <Routes>
+                    <Route path="/" element={<Navigate to="Account" />} />
+                    <Route path="Account/*" element={<Account />} />
+                    <Route path="Dashboard/*" element={
+                        <ProtectedRoute>
+                            <Dashboard
+                                courses={courses}
+                                course={course}
+                                setCourse={setCourse}
+                                addNewCourse={addNewCourse}
+                                deleteCourse={deleteCourse}
+                                updateCourse={updateCourse}
+                            />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="Courses/:cid/*" element={
+                        <ProtectedCourseRoute>
+                            <Courses courses={courses} />
+                        </ProtectedCourseRoute>
+                    } />
+                    <Route path="Calendar/*" element={<Calendar />} />
+                    <Route path="Mail/*" element={<Mail />} />
+                </Routes>
+            </div>
+        </div>
+    );
+}
+```
+
+Key changes made:
+1. Added enrollment toggle button for students
+2. Added Enroll/Unenroll buttons for each course
+3. Implemented course access restriction based on enrollment
+4. Added filtering for enrolled courses
+5. Created ProtectedCourseRoute for route protection
+6. Maintained faculty access to all courses
+7. Added proper navigation handling
+
+The functionality now includes:
+- Students see an Enrollments toggle button
+- Students can Enroll/Unenroll from courses
+- Enrolled courses show red Unenroll button
+- Non-enrolled courses show green Enroll button
+- Students can only access courses they're enrolled in
+- Faculty maintain full access to all courses
+- Enrollment state persists during the session
+
+Try it out and let me know if you need any adjustments!
+
+---
+
+_**User**_
+
+[vite] SyntaxError: The requested module 'http://localhost:5173/src/Kambaz/Account/ProtectedCourseRoute.tsx?t=1741510246366' doesn't provide an export named: 'default' client:831:28
+    error client:831
+    warnFailedUpdate client:164
+    fetchUpdate client:203
+    queueUpdate client:176
+    handleMessage client:879
+    handleMessage client:877
+    onMessage client:298
+    connect client:428
+    (Async: EventListener.handleEvent)
+    connect client:427
+    connect client:760
+    connect client:279
+    connect client:372
+    <anonymous> client:857
+
+---
+
+_**Assistant**_
+
+
 
 ---
 
