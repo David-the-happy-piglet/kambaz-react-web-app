@@ -7,12 +7,12 @@ import Home from "./Home";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addAssignment, updateAssignment } from "./Assignments/reducer";
 //import * as db from "../Database";
 
 export default function Courses({ courses }: { courses: any[] }) {
-    const { aid, cid } = useParams();
+    const { cid } = useParams();
     const { pathname } = useLocation();
     const [assignmentTitle, setAssignmentTitle] = useState("");
     const dispatch = useDispatch();

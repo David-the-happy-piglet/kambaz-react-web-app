@@ -1,7 +1,7 @@
 import { Button, Card, Col, FormControl, Row } from "react-bootstrap";
-import { Form, Link, useNavigate } from "react-router-dom";
+import { /* Form, Link, */ useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import * as db from "../Database";
+/* import * as db from "../Database"; */
 import { isFaculty } from "../Account/reducer";
 import { toggleEnrollment, toggleShowAllCourses } from "./enrollmentReducer";
 
@@ -82,7 +82,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                         {isStudent && (
                                             <Button
                                                 variant={enrollments.includes(course._id) ? "danger" : "success"}
-                                                onClick={(e) => {
+                                                onClick={(/* e */) => {
                                                     /* e.stopPropagation(); */
                                                     dispatch(toggleEnrollment(course._id));
                                                 }}

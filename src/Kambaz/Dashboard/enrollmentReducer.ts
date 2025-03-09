@@ -12,9 +12,9 @@ const enrollmentSlice = createSlice({
         toggleEnrollment: (state, { payload: courseId }) => {
             const index = state.enrollments.indexOf(courseId);
             if (index === -1) {
-                state.enrollments.push(courseId);
+                state.enrollments.push(courseId);// Add the course to the list
             } else {
-                state.enrollments.splice(index, 1);
+                state.enrollments.splice(index, 1);// Remove the course from the list
             }
         },
         toggleShowAllCourses: (state) => {

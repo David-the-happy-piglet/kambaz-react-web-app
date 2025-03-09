@@ -1,23 +1,23 @@
-import { Col, ListGroup, Row, Button } from "react-bootstrap";
+import { Col, ListGroup, Row } from "react-bootstrap";
 import AssignmentsControls from "./AssignmentsControls";
 import { BsGripVertical } from "react-icons/bs";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import ControlButtons from "./ControlButtons";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
-import * as db from "../../Database";
-
-import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
+/* import * as db from "../../Database";
+ */
+import {/*  addAssignment, */ deleteAssignment,/*  updateAssignment, editAssignment  */ } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
-import { isFaculty } from "../../Account/reducer";
+/* import { useState } from "react"; */
+/* import { isFaculty } from "../../Account/reducer"; */
 
 
 export default function Assignments() {
 
     const { cid } = useParams();
-    const [assignmentTitle, setAssignmentTitle] = useState("");
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    /*     const [assignmentTitle, setAssignmentTitle] = useState(""); */
+    /*  const { currentUser } = useSelector((state: any) => state.accountReducer); */
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const dispatch = useDispatch();
 

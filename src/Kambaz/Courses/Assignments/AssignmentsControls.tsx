@@ -3,8 +3,8 @@ import { Button, FormControl, InputGroup } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 // import AssignmentEditor from "./Editor";
 // import { addAssignment } from "./reducer";
-import { useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+/* import { useState } from "react"; */
+import { Link, /* Navigate, */ useParams } from "react-router-dom";
 
 export default function AssignmentsControls() {
 

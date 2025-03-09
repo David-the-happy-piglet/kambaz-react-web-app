@@ -1,7 +1,7 @@
 import { IoEllipsisVertical } from "react-icons/io5";
 import GreenCheckmark from "./GreenCheckmark";
 import { FaTrash } from "react-icons/fa";
-import { deleteAssignment } from "./reducer";
+/* import { deleteAssignment } from "./reducer"; */
 import { useState } from "react";
 import DeleteConfirm from "./DeleteConfirm";
 
