@@ -6720,6 +6720,338 @@ Let me know if you still see any errors.
 
 ---
 
+_**User**_
+
+Now, on your own, create a module object with string properties id, name, description, and course. Feel free to use values of your choice.
+Create a route that responds with the module object, mapped to /lab5/module
+In the UI, create a link labeled Get Module that retrieves the module object from the server mapped at /lab5/module
+Confirm that clicking the link retrieves the module.
+Create another route mapped to /lab5/module/name that retrieves the name of the module created earlier
+In the UI, create a hyperlink labeled Get Module Name that retrieves the name of the module object
+Confirm that clicking the link retrieves the module's name.
+On your own, in WorkingWithObjects.tsx, create a module state variable to test editing the module object on the server. Create an input field where we can type the new module name, and a link that invokes the route that updates the name. Confirm that you can change the module's name. Create routes and a corresponding UI that can modify the score and completed properties of the assignment object. In the React application, create an input field of type number where you can type the new score and an input field of type checkbox where you can select the completed property. Create a link that updates the score and another link that updates the completed property. For the module, create routes and UI to edit the module's description.
+
+
+---
+
+_**Assistant**_
+
+I'll help you implement these features step by step.
+
+1. First, let's create the module object and routes in `Lab5/index.js`:
+
+```javascript:src/Labs/Lab5/index.js
+import express from 'express';
+
+const module = {
+    id: "M1",
+    name: "Introduction to Web Development",
+    description: "Learn the basics of web development",
+    course: "CS5610"
+};
+
+export default function Lab5(app) {
+    // Get module object
+    app.get("/lab5/module", (req, res) => {
+        res.json(module);
+    });
+
+    // Get module name
+    app.get("/lab5/module/name", (req, res) => {
+        res.json(module.name);
+    });
+
+    // Update module name
+    app.put("/lab5/module/name", (req, res) => {
+        const newName = req.body.name;
+        module.name = newName;
+        res.json(module);
+    });
+
+    // Update module description
+    app.put("/lab5/module/description", (req, res) => {
+        const newDescription = req.body.description;
+        module.description = newDescription;
+        res.json(module);
+    });
+
+    // Update assignment score
+    app.put("/lab5/assignment/score", (req, res) => {
+        const newScore = req.body.score;
+        module.score = newScore;
+        res.json(module);
+    });
+
+    // Update assignment completed status
+    app.put("/lab5/assignment/completed", (req, res) => {
+        const completed = req.body.completed;
+        module.completed = completed;
+        res.json(module);
+    });
+}
+```
+
+2. Now, let's create the React component in `WorkingWithObjects.tsx`:
+
+```typescript:src/Labs/Lab5/WorkingWithObjects.tsx
+import { useState } from 'react';
+
+export default function WorkingWithObjects() {
+    const [module, setModule] = useState({
+        id: "M1",
+        name: "Introduction to Web Development",
+        description: "Learn the basics of web development",
+        course: "CS5610",
+        score: 0,
+        completed: false
+    });
+
+    const updateModuleName = async () => {
+        const response = await fetch('http://localhost:4000/lab5/module/name', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: module.name })
+        });
+        const data = await response.json();
+        setModule(data);
+    };
+
+    const updateModuleDescription = async () => {
+        const response = await fetch('http://localhost:4000/lab5/module/description', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ description: module.description })
+        });
+        const data = await response.json();
+        setModule(data);
+    };
+
+    const updateScore = async () => {
+        const response = await fetch('http://localhost:4000/lab5/assignment/score', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ score: module.score })
+        });
+        const data = await response.json();
+        setModule(data);
+    };
+
+    const updateCompleted = async () => {
+        const response = await fetch('http://localhost:4000/lab5/assignment/completed', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ completed: module.completed })
+        });
+        const data = await response.json();
+        setModule(data);
+    };
+
+    return (
+        <div>
+            <h2>Working with Objects</h2>
+            
+            {/* Get Module Links */}
+            <div>
+                <a href="http://localhost:4000/lab5/module" className="btn btn-primary me-2">
+                    Get Module
+                </a>
+                <a href="http://localhost:4000/lab5/module/name" className="btn btn-primary">
+                    Get Module Name
+                </a>
+            </div>
+
+            {/* Module Name Update */}
+            <div className="mt-3">
+                <h3>Update Module Name</h3>
+                <input
+                    type="text"
+                    value={module.name}
+                    onChange={(e) => setModule({ ...module, name: e.target.value })}
+                    className="form-control mb-2"
+                />
+                <button onClick={updateModuleName} className="btn btn-warning">
+                    Update Name
+                </button>
+            </div>
+
+            {/* Module Description Update */}
+            <div className="mt-3">
+                <h3>Update Module Description</h3>
+                <textarea
+                    value={module.description}
+                    onChange={(e) => setModule({ ...module, description: e.target.value })}
+                    className="form-control mb-2"
+                />
+                <button onClick={updateModuleDescription} className="btn btn-warning">
+                    Update Description
+                </button>
+            </div>
+
+            {/* Assignment Score Update */}
+            <div className="mt-3">
+                <h3>Update Assignment Score</h3>
+                <input
+                    type="number"
+                    value={module.score}
+                    onChange={(e) => setModule({ ...module, score: parseInt(e.target.value) })}
+                    className="form-control mb-2"
+                />
+                <button onClick={updateScore} className="btn btn-warning">
+                    Update Score
+                </button>
+            </div>
+
+            {/* Assignment Completed Update */}
+            <div className="mt-3">
+                <h3>Update Assignment Status</h3>
+                <div className="form-check mb-2">
+                    <input
+                        type="checkbox"
+                        checked={module.completed}
+                        onChange={(e) => setModule({ ...module, completed: e.target.checked })}
+                        className="form-check-input"
+                    />
+                    <label className="form-check-label">Completed</label>
+                </div>
+                <button onClick={updateCompleted} className="btn btn-warning">
+                    Update Status
+                </button>
+            </div>
+        </div>
+    );
+}
+```
+
+3. Update your `index.js` to handle JSON requests:
+
+```javascript:index.js
+import express from 'express';
+import Hello from './src/Hello.js';
+import Lab5 from './src/Labs/Lab5/index.js';
+
+const app = express();
+
+// Add middleware to parse JSON bodies
+app.use(express.json());
+
+// Add security headers
+app.use((req, res, next) => {
+    res.header('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:;");
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
+Hello(app);
+Lab5(app);
+
+const PORT = 4000;
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
+```
+
+This implementation provides:
+1. A module object with all required properties
+2. Routes to get the module and its name
+3. UI links to retrieve the module and its name
+4. Input fields and buttons to update:
+   - Module name
+   - Module description
+   - Assignment score
+   - Assignment completed status
+5. Proper error handling and state management
+
+Try it out and let me know if you need any adjustments!
+
+---
+
+_**User**_
+
+For the code present, we get this error:
+```
+Type 'boolean' is not assignable to type 'string | number | readonly string[] | undefined'.
+```
+How can I resolve this? If you propose a fix, please make it concise.
+
+---
+
+_**Assistant**_
+
+I see the issue. The `FormControl` component's `defaultValue` prop expects a string, number, or array, but we're passing a boolean. Let's fix this by converting the boolean to a string.
+
+I'll edit the `WorkingWithObjects.tsx` file:
+
+
+---
+
+_****_
+
+```diff
+              </a>
+              <FormControl className="w-75" id="wd-assignment-completed"
+-                 defaultValue={assignment.completed} onChange={(e) =>
++                 defaultValue={assignment.completed.toString()} onChange={(e) =>
+                      setAssignment({ ...assignment, completed: e.target.value === "true" })} />
+              <hr />
+```
+
+---
+
+_****_
+
+This change converts the boolean value to a string using `toString()`, which resolves the type error while maintaining the same functionality.
+
+---
+
+_**User**_
+
+i want a checkbox to change the complete instead of FormControl
+
+---
+
+_**Assistant**_
+
+I'll modify the code to use a checkbox instead of FormControl for the completed status.
+
+
+---
+
+_****_
+
+```diff
+                  Update Completed
+              </a>
+-             <FormControl className="w-75" id="wd-assignment-completed"
+-                 defaultValue={assignment.completed.toString()} onChange={(e) =>
+-                     setAssignment({ ...assignment, completed: e.target.value === "true" })} />
++             <input type="checkbox" 
++                 id="wd-assignment-completed"
++                 checked={assignment.completed}
++                 onChange={(e) => setAssignment({ ...assignment, completed: e.target.checked })} />
+              <hr />
+  
+```
+
+---
+
+_****_
+
+This change:
+1. Replaces the FormControl with a standard HTML checkbox input
+2. Uses `checked` prop instead of `defaultValue` to control the checkbox state
+3. Directly uses `e.target.checked` to get the boolean value instead of string comparison
+4. Maintains the same functionality but with a more appropriate UI element for boolean values
+
+---
+
 
 
 ---

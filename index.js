@@ -1,9 +1,11 @@
 import express from 'express';
 import Hello from './src/Hello.js';
 import Lab5 from './src/Labs/Lab5/index.js';
+import cors from "cors";
 
 const app = express();
-
+app.use(cors());
+app.use(express.json());
 
 // Add security headers
 app.use((req, res, next) => {
