@@ -23,6 +23,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
         }
     };
 
+    //remove?
     const displayedCourses = isStudent && !showAllCourses
         ? courses.filter(course => enrollments.includes(course._id))
         : courses;
