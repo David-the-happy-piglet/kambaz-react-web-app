@@ -2,7 +2,7 @@ import axios from "axios";
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;
 
-const API_BASE = import.meta.env.VITE_REACT_APP_API_BASE || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 export interface Course {
     _id: string;
