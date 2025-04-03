@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
-const USERS_API = `${API_BASE}/api/users`;
+const GRADES_API = `${API_BASE}/api`;
 
 // Configure axios defaults
 const axiosWithCredentials = axios.create({
@@ -24,70 +24,68 @@ axiosWithCredentials.interceptors.response.use(
     }
 );
 
-export const signin = async (credentials: any) => {
+export const findAllGrades = async () => {
     try {
-        const response = await axiosWithCredentials.post(`${USERS_API}/signin`, credentials);
+        const response = await axiosWithCredentials.get(`${GRADES_API}/grades`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
     }
 };
 
-export const signup = async (user: any) => {
+export const findGradeById = async (gradeId: string) => {
     try {
-        const response = await axiosWithCredentials.post(`${USERS_API}/signup`, user);
+        const response = await axiosWithCredentials.get(`${GRADES_API}/grades/${gradeId}`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
     }
 };
 
-export const updateUser = async (user: any) => {
+export const findGradesByStudent = async (studentId: string) => {
     try {
-        const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
+        const response = await axiosWithCredentials.get(`${GRADES_API}/students/${studentId}/grades`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
     }
 };
 
-export const profile = async () => {
+export const findGradesByAssignment = async (assignmentId: string) => {
     try {
-        const response = await axiosWithCredentials.post(`${USERS_API}/profile`);
-        return response.data;
-    } catch (error: any) {
-        throw error;
-    }
-};
-
-export const signout = async () => {
-    try {
-        const response = await axiosWithCredentials.post(`${USERS_API}/signout`);
+        const response = await axiosWithCredentials.get(`${GRADES_API}/assignments/${assignmentId}/grades`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
     }
 };
 
-export const findMyCourses = async () => {
+export const createGrade = async (assignmentId: string, studentId: string, grade: any) => {
     try {
-        const response = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
+        const response = await axiosWithCredentials.post(
+            `${GRADES_API}/assignments/${assignmentId}/students/${studentId}/grades`,
+            grade
+        );
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
     }
 };
 
-export const createCourse = async (course: any) => {
+export const updateGrade = async (gradeId: string, grade: any) => {
     try {
-        const response = await axiosWithCredentials.post(`${USERS_API}/current/courses`, course);
+        const response = await axiosWithCredentials.put(`${GRADES_API}/grades/${gradeId}`, grade);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
     }
 };
 
-
-
-
-
+export const deleteGrade = async (gradeId: string) => {
+    try {
+        const response = await axiosWithCredentials.delete(`${GRADES_API}/grades/${gradeId}`);
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || error;
+    }
+}; 

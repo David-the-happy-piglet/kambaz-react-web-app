@@ -1,24 +1,51 @@
-import * as client from "./client";
 import { useEffect, useState } from "react";
-import { setCurrentUser } from "./reducer";
 import { useDispatch } from "react-redux";
-export default function Session({ children }: { children: any }) {
-    const [pending, setPending] = useState(true);
+import { useLocation, useNavigate } from "react-router-dom";
+import { setCurrentUser } from "./reducer";
+import * as client from "./client";
+
+function Session({ children }: { children: React.ReactNode }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const fetchProfile = async () => {
         try {
-            const currentUser = await client.profile();
-            dispatch(setCurrentUser(currentUser));
-        } catch (err: any) {
-            console.error(err);
+            setLoading(true);
+            setError(null);
+            const user = await client.profile();
+            dispatch(setCurrentUser(user));
+        } catch (e: any) {
+            console.error("Session error:", e);
+            if (e.response?.status === 401 &&
+                !pathname.includes('/Kambaz/Account/Signin') &&
+                !pathname.includes('/Kambaz/Account/Signup')) {
+                navigate("/Kambaz/Account/Signin");
+            }
+            setError("Failed to fetch user profile");
+        } finally {
+            setLoading(false);
         }
-        setPending(false);
     };
+
     useEffect(() => {
         fetchProfile();
-    }, []);
-    if (!pending) {
-        return children;
+    }, [pathname]);
+
+    if (loading) {
+        return <div>Loading session...</div>;
     }
+
+    if (error &&
+        !pathname.includes('/Kambaz/Account/Signin') &&
+        !pathname.includes('/Kambaz/Account/Signup')) {
+        return <div className="alert alert-danger">{error}</div>;
+    }
+
+    return <>{children}</>;
 }
+
+export default Session;
 

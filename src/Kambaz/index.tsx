@@ -3,6 +3,7 @@ import Account from "./Account";
 import Dashboard from "./Dashboard";
 import Courses from "./Courses";
 import Mail from "./Mail";
+import Grades from "./Grades";
 
 import KambazNavigation from "./KambazNavigation";
 import Calendar from "./Calendar";
@@ -93,6 +94,11 @@ export default function Kambaz() {
                         } />
                         <Route path="Calendar/*" element={<Calendar />} />
                         <Route path="Mail/*" element={<Mail />} />
+                        <Route path="Grades/*" element={
+                            <ProtectedRoute>
+                                <Grades />
+                            </ProtectedRoute>
+                        } />
                     </Routes>
 
 
