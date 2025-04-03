@@ -6,13 +6,13 @@ import AssignmentEditor from "./Assignments/Editor";
 import Home from "./Home";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 //import * as db from "../Database";
 
 export default function Courses({ courses }: { courses: any[] }) {
     const { cid } = useParams();
     const { pathname } = useLocation();
-    const dispatch = useDispatch();
+    /* const dispatch = useDispatch(); */
     const course = courses.find((course) => course._id === cid);
 
     return (

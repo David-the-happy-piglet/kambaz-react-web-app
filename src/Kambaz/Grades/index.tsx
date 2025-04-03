@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Table, Button, Alert, Spinner } from "react-bootstrap";
 import * as client from "./client";
