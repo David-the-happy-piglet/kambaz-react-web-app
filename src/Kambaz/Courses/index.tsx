@@ -6,15 +6,12 @@ import AssignmentEditor from "./Assignments/Editor";
 import Home from "./Home";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addAssignment, updateAssignment } from "./Assignments/reducer";
 //import * as db from "../Database";
 
 export default function Courses({ courses }: { courses: any[] }) {
     const { cid } = useParams();
     const { pathname } = useLocation();
-    const [assignmentTitle, setAssignmentTitle] = useState("");
     const dispatch = useDispatch();
     const course = courses.find((course) => course._id === cid);
 
@@ -35,43 +32,7 @@ export default function Courses({ courses }: { courses: any[] }) {
                         <Route path="Home" element={<Home />} />
                         <Route path="Modules" element={<Modules />} />
                         <Route path="Assignments" element={<Assignments />} />
-                        {/* <Route path="Assignments/add" element={
-                            <AssignmentEditor
-                                assignmentTitle={assignmentTitle}
-                                setAssignmentTitle={setAssignmentTitle}
-                                addAssignment={() => {
-                                    console.log("Adding assignment:", assignmentTitle);
-                                    dispatch(addAssignment({
-                                        title: assignmentTitle,
-                                        course: cid
-                                    }));
-                                }}
-                                updateAssignment={() => {
-                                    dispatch(updateAssignment({
-                                        title: assignmentTitle,
-                                        course: cid
-                                    }));
-                                }}
-                            />
-                        } /> */}
-                        <Route path="Assignments/:aid" element={
-                            <AssignmentEditor
-                                assignmentTitle={assignmentTitle}
-                                setAssignmentTitle={setAssignmentTitle}
-                                addAssignment={() => {
-                                    console.log("Adding assignment:", { title: assignmentTitle, course: cid });
-                                    dispatch(addAssignment({
-                                        title: assignmentTitle,
-                                        course: cid
-                                    }));
-                                }}
-                                updateAssignment={(updatedAssignment) => {
-                                    console.log("updating assignment:", updatedAssignment)
-                                    dispatch(updateAssignment(
-                                        updatedAssignment
-                                    ));
-                                }}
-                            />} />
+                        <Route path="Assignments/:aid" element={<AssignmentEditor />} />
                         <Route path="Zoom" element={<h2>Zoom</h2>} />
                         <Route path="Quizzes" element={<h2>Quizzes</h2>} />
                         <Route path="Grades" element={<h2>Grades</h2>} />

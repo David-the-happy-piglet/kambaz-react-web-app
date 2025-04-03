@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Form, FormControl, Row, Alert } from "react-bootstrap";
+import { Button, Col, Form, Row, Alert } from "react-bootstrap";
 // import { useParams } from "react-router-dom";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { /* useDispatch, */ useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+// import { /* useDispatch, */ useSelector } from "react-redux";
 import { Assignment, createAssignment, findAssignmentById, updateAssignment } from "./client";
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
     const navigate = useNavigate();
     // const dispatch = useDispatch();
-    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    // const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [assignment, setAssignment] = useState<Partial<Assignment>>({

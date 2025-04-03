@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, /* useNavigate */ } from "react-router-dom";
 import { Button, ListGroup, Row, Col, Alert } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { MdOutlineAssignmentTurnedIn } from "react-icons/md";
@@ -8,7 +8,7 @@ import { Assignment, findAssignmentsForCourse, deleteAssignment } from "./client
 
 export default function Assignments() {
     const { cid } = useParams();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [assignments, setAssignments] = useState<Assignment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
