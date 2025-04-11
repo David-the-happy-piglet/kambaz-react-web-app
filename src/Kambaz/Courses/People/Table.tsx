@@ -1,25 +1,25 @@
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 
-import { useParams } from "react-router-dom";
-import * as db from "../../Database";
+// import { useParams } from "react-router-dom";
+// import * as db from "../../Database";
 
 
-export default function PeopleTable() {
+export default function PeopleTable({ users = [] }: { users?: any[] }) {
 
-    const { cid } = useParams();
-    const { users, enrollments } = db;
+    // const { cid } = useParams();
+    // const { users, enrollments } = db;
 
 
-    console.log("cid:", cid);
-    console.log("Users:", users);
-    console.log("Enrollments:", enrollments);
-    console.log(
-        "Filtered users:",
-        users.filter((usr) =>
-            enrollments.some((enrollment) => enrollment.user === usr._id && enrollment.course === cid)
-        )
-    );
+    // console.log("cid:", cid);
+    // console.log("Users:", users);
+    // console.log("Enrollments:", enrollments);
+    // console.log(
+    //     "Filtered users:",
+    //     users.filter((usr) =>
+    //         enrollments.some((enrollment) => enrollment.user === usr._id && enrollment.course === cid)
+    //     )
+    // );
 
 
 
@@ -32,9 +32,8 @@ export default function PeopleTable() {
 
                 <tbody>
                     {users
-                        .filter((usr) =>
-                            enrollments.some((enrollment) => enrollment.user === usr._id && enrollment.course === cid)
-                        )
+                        // .filter((usr) =>
+                        //     enrollments.some((enrollment) => enrollment.user === usr._id && enrollment.course === cid))
                         .map((user: any) => (
                             <tr key={user._id}>
                                 <td className="wd-full-name text-nowrap">
