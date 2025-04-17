@@ -44,7 +44,7 @@ export const findUserById = async (userId: string) => {
     return response.data;
 };
 
-export const createUser = async (user: Partial<User>) => {
+export const createUser = async (user: any) => {
     const response = await axiosWithCredentials.post(`${API_PATH}/users`, user);
     return response.data;
 };
