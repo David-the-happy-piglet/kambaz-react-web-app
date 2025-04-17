@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 const API_PATH = `${API_BASE}/api`;
+const USERS_API = `${API_BASE}/api/users`;
 
 // Configure axios defaults
 const axiosWithCredentials = axios.create({ withCredentials: true });
@@ -24,7 +25,12 @@ export const findAllUsers = async () => {
 };
 
 export const findUsersByRole = async (role: string) => {
-    const response = await axiosWithCredentials.get(`${API_PATH}/users/role/${role}`);
+    const response = await axiosWithCredentials.get(`$${USERS_API}?role=${role}`);
+    return response.data;
+};
+
+export const findUsersByPartialName = async (name: string) => {
+    const response = await axios.get(`${USERS_API}?name=${name}`);
     return response.data;
 };
 
@@ -43,8 +49,8 @@ export const createUser = async (user: Partial<User>) => {
     return response.data;
 };
 
-export const updateUser = async (userId: string, user: Partial<User>) => {
-    const response = await axiosWithCredentials.put(`${API_PATH}/users/${userId}`, user);
+export const updateUser = async (user: any) => {
+    const response = await axiosWithCredentials.put(`${API_PATH}/users/${user._id}`, user);
     return response.data;
 };
 
@@ -52,6 +58,7 @@ export const deleteUser = async (userId: string) => {
     const response = await axiosWithCredentials.delete(`${API_PATH}/users/${userId}`);
     return response.data;
 };
+
 
 export const enrollUserInCourse = async (userId: string, courseId: string) => {
     const response = await axiosWithCredentials.post(`${API_PATH}/users/${userId}/courses/${courseId}/enroll`);
