@@ -109,9 +109,9 @@ export const createUser = async (user: any) => {
     return response.data;
 };
 
-export const updateUser = async (user: any) => {
+export const updateUser = async (_id: any, user: any) => {
     try {
-        const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
+        const response = await axiosWithCredentials.put(`${USERS_API}/${_id}`, user);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
