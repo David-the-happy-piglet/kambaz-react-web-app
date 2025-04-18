@@ -109,7 +109,7 @@ export const createUser = async (user: any) => {
     return response.data;
 };
 
-export const updateUser = async (user: any, editingUser: User) => {
+export const updateUser = async (user: any) => {
     try {
         const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
         return response.data;

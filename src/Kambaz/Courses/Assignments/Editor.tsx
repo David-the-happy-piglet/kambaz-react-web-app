@@ -17,9 +17,10 @@ export default function AssignmentEditor() {
         description: "",
         points: 100,
         dueDate: "",
-        availableFrom: "",
-        availableUntil: "",
-        course: cid
+        availableFromDate: "",
+        availableUntilDate: "",
+        course: cid,
+        type: "ASSIGNMENT"
     });
 
     useEffect(() => {
@@ -65,9 +66,9 @@ export default function AssignmentEditor() {
             setLoading(true);
             setError(null);
             if (aid === "add") {
-                await createAssignment(cid, assignment);
+                await createAssignment(assignment as Assignment);
             } else if (aid) {
-                await updateAssignment(aid, assignment);
+                await updateAssignment(assignment as Assignment);
             }
             navigate(`/Kambaz/Courses/${cid}/Assignments`);
         } catch (err) {
@@ -147,8 +148,8 @@ export default function AssignmentEditor() {
                     <Col sm={4}>
                         <Form.Control
                             type="date"
-                            value={assignment.availableFrom || ""}
-                            onChange={(e) => setAssignment({ ...assignment, availableFrom: e.target.value })}
+                            value={assignment.availableFromDate || ""}
+                            onChange={(e) => setAssignment({ ...assignment, availableFromDate: e.target.value })}
                         />
                     </Col>
                 </Form.Group>
@@ -158,39 +159,22 @@ export default function AssignmentEditor() {
                     <Col sm={4}>
                         <Form.Control
                             type="date"
-                            value={assignment.availableUntil || ""}
-                            onChange={(e) => setAssignment({ ...assignment, availableUntil: e.target.value })}
+                            value={assignment.availableUntilDate || ""}
+                            onChange={(e) => setAssignment({ ...assignment, availableUntilDate: e.target.value })}
                         />
                     </Col>
                 </Form.Group>
 
                 <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>Assignment Group</Form.Label>
+                    <Form.Label column sm={2}>Assignment Type</Form.Label>
                     <Col sm={4}>
-                        <Form.Select>
-                            <option value="ASSIGNMENT">ASSIGNMENT</option>
-                            <option value="LABS">LABS</option>
-                            <option value="EXTRACREDIT">EXTRA CREDIT</option>
-                        </Form.Select>
-                    </Col>
-                </Form.Group>
-
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>Display Grade as</Form.Label>
-                    <Col sm={4}>
-                        <Form.Select>
-                            <option value="Percentage">Percentage</option>
-                            <option value="AbsoluteValue">Absolute Value</option>
-                        </Form.Select>
-                    </Col>
-                </Form.Group>
-
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>Submission Type</Form.Label>
-                    <Col sm={4}>
-                        <Form.Select>
-                            <option value="Online">Online</option>
-                            <option value="InClass">In Class</option>
+                        <Form.Select
+                            value={assignment.type || "ASSIGNMENT"}
+                            onChange={(e) => setAssignment({ ...assignment, type: e.target.value as "QUIZ" | "ASSIGNMENT" | "EXAM" })}
+                        >
+                            <option value="QUIZ">Quiz</option>
+                            <option value="ASSIGNMENT">Assignment</option>
+                            <option value="EXAM">Exam</option>
                         </Form.Select>
                     </Col>
                 </Form.Group>
