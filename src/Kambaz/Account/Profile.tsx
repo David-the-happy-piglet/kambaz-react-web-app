@@ -12,7 +12,7 @@ export default function Profile() {
     const navigate = useNavigate();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const updateProfile = async () => {
-        const updatedProfile = await client.updateUser(profile);
+        const updatedProfile = await client.updateUser(profile._id, profile);
         dispatch(setCurrentUser(updatedProfile));
     };
 
