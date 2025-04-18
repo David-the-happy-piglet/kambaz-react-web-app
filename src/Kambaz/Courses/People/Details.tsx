@@ -3,7 +3,7 @@ import { FaCheck, FaUserCircle } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import { useParams, useNavigate } from "react-router";
 import { FaPencil } from "react-icons/fa6";
-import * as client from "../../Users/client";
+import * as client from "../../Account/client";
 import { FormControl } from "react-bootstrap";
 
 export default function PeopleDetails({ fetchUsers }: { fetchUsers: () => void }) {
@@ -18,7 +18,7 @@ export default function PeopleDetails({ fetchUsers }: { fetchUsers: () => void }
     const saveUser = async () => {
         const [firstName, lastName] = name.split(" ");
         const updatedUser = { ...user, firstName, lastName };
-        await client.updateUser(updatedUser);
+        await client.updateUser(updatedUser, user._id);
         setUser(updatedUser);
         setEditing(false);
         fetchUsers();

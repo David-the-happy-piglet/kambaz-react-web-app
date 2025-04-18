@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
-const USERS_API = `${API_BASE}/api/users`;
+const API_PATH = `${API_BASE}/api`;
+const USERS_API = `${API_PATH}/users`;
 
 // Configure axios defaults
 const axiosWithCredentials = axios.create({
@@ -24,6 +25,17 @@ axiosWithCredentials.interceptors.response.use(
     }
 );
 
+export interface User {
+    _id: string;
+    username: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    role: "FACULTY" | "STUDENT";
+    courses?: string[];
+}
+
+// Account related functions
 export const signin = async (credentials: any) => {
     try {
         const response = await axiosWithCredentials.post(`${USERS_API}/signin`, credentials);
@@ -42,22 +54,18 @@ export const signup = async (user: any) => {
     }
 };
 
-
-export const updateUser = async (user: any) => {
-    try {
-        const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
-        return response.data;
-    } catch (error: any) {
-        throw error.response?.data || error;
-    }
-};
-
 export const profile = async () => {
     try {
         const response = await axiosWithCredentials.post(`${USERS_API}/profile`);
+        if (!response.data) {
+            throw new Error("User not found");
+        }
         return response.data;
     } catch (error: any) {
-        throw error;
+        if (error.response?.status === 401) {
+            throw new Error("Not authenticated");
+        }
+        throw error.response?.data || error;
     }
 };
 
@@ -70,9 +78,70 @@ export const signout = async () => {
     }
 };
 
+// User management functions
+export const findAllUsers = async () => {
+    const response = await axiosWithCredentials.get(`${USERS_API}`);
+    return response.data;
+};
+
+export const findUsersByRole = async (role: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}?role=${role}`);
+    return response.data;
+};
+
+export const findUsersByPartialName = async (name: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}?name=${name}`);
+    return response.data;
+};
+
+export const findUsersByCourse = async (courseId: string) => {
+    const response = await axiosWithCredentials.get(`${API_PATH}/courses/${courseId}/users`);
+    return response.data;
+};
+
+export const findUserById = async (userId: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}/${userId}`);
+    return response.data;
+};
+
+export const createUser = async (user: any) => {
+    const response = await axiosWithCredentials.post(`${USERS_API}`, user);
+    return response.data;
+};
+
+export const updateUser = async (user: any, editingUser: User) => {
+    try {
+        const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || error;
+    }
+};
+
+export const deleteUser = async (userId: string) => {
+    const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}`);
+    return response.data;
+};
+
+// Course related functions
+export const findCoursesForUser = async (userId: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/courses`);
+    return response.data;
+};
+
+export const enrollIntoCourse = async (userId: string, courseId: string) => {
+    const response = await axiosWithCredentials.post(`${USERS_API}/${userId}/courses/${courseId}`);
+    return response.data;
+};
+
+export const unenrollFromCourse = async (userId: string, courseId: string) => {
+    const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}/courses/${courseId}`);
+    return response.data;
+};
+
 export const findMyCourses = async () => {
     try {
-        const response = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
+        const response = await axiosWithCredentials.get(`${USERS_API}/courses`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;
@@ -81,7 +150,7 @@ export const findMyCourses = async () => {
 
 export const createCourse = async (course: any) => {
     try {
-        const response = await axiosWithCredentials.post(`${USERS_API}/current/courses`, course);
+        const response = await axiosWithCredentials.post(`${API_PATH}/courses`, course);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || error;

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table, Alert } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { User, createUser, deleteUser, findUsersByCourse, updateUser } from "../../Users/client";
+import { User, createUser, deleteUser, updateUser } from "../../Account/client";
+import * as courseClient from "../client";
 
 export default function People() {
     const { cid } = useSelector((state: any) => state.courseReducer);
@@ -27,7 +28,7 @@ export default function People() {
                 setError("No course selected");
                 return;
             }
-            const courseUsers = await findUsersByCourse(cid);
+            const courseUsers = await courseClient.findUsersForCourse(cid);
             setUsers(courseUsers || []);
         } catch (error) {
             console.error("Error fetching users:", error);

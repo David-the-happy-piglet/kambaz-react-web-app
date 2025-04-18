@@ -5,7 +5,7 @@ import Signup from "./Signup";
 import AccountNavigation from "./AccountNavigation";
 import { useSelector } from "react-redux";
 import Users from "./Users";
-import PeopleDetails from "../Courses/People/Details";
+
 
 
 export default function Account() {

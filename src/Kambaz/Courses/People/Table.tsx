@@ -31,6 +31,9 @@ export default function PeopleTable({ users = [] }: { users?: any[] }) {
     return (
 
         <div id="wd-people-table">
+            <PeopleDetails fetchUsers={function (): void {
+                throw new Error("Function not implemented.");
+            }} />
 
             <Table striped>
                 <thead>

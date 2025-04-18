@@ -6,10 +6,13 @@ import { isFaculty } from "../Account/reducer";
 import { toggleEnrollment, toggleShowAllCourses } from "./enrollmentReducer";
 
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse }: {
+    deleteCourse, updateCourse, enrolling, setEnrolling, updateEnrollment }: {
         courses: any[]; course: any; setCourse: (course: any) => void;
         addNewCourse: () => void; deleteCourse: (course: any) => void;
         updateCourse: () => void;
+        enrolling: boolean;
+        setEnrolling: (enrolling: boolean) => void;
+        updateEnrollment: (courseId: string, enrolled: boolean) => void;
     }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -24,13 +27,17 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     };
 
     //remove?
-    const displayedCourses = isStudent && !showAllCourses
-        ? courses.filter(course => enrollments.includes(course._id))
-        : courses;
-
+    /*     const displayedCourses = isStudent && !showAllCourses
+            ? courses.filter(course => enrollments.includes(course._id))
+            : courses;
+     */
     return (
         <div id="wd-dashboard">
-            <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+            <h1 id="wd-dashboard-title">Dashboard
+                <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+                    {enrolling ? "My Courses" : "All Courses"}
+                </button>
+            </h1> <hr />
 
             {/* Faculty Controls */}
             {isFaculty(currentUser) && (
@@ -60,11 +67,11 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                 </div>
             )}
 
-            <h2 id="wd-dashboard-published">Published Courses ({displayedCourses.length})</h2> <hr />
+            <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
 
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
-                    {displayedCourses.map((course) => (
+                    {courses.map((course) => (
                         <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
                             <Card>
                                 <div className="wd-dashboard-course-link text-decoration-none text-dark"
@@ -73,6 +80,14 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                     <Card.Img variant="top" src="/images/reactjs.jpg" width="100%" height={160} />
                                     <Card.Body className="card-body">
                                         <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                                            {enrolling && (
+                                                <button onClick={(event) => {
+                                                    event.preventDefault();
+                                                    updateEnrollment(course._id, !course.enrolled);
+                                                }} className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                                                    {course.enrolled ? "Unenroll" : "Enroll"}
+                                                </button>
+                                            )}
                                             {course.name}
                                         </Card.Title>
                                         <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>

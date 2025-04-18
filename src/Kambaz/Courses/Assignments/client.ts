@@ -1,40 +1,46 @@
 import axios from "axios";
-
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
-const API_PREFIX = "/api";
+const axiosWithCredentials = axios.create({ withCredentials: true });
+const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
+const ASSIGNMENTS_API = `${REMOTE_SERVER}/api/assignments`;
 
 export interface Assignment {
     _id: string;
     title: string;
+    description: string;
     course: string;
-    description?: string;
-    points?: number;
-    dueDate?: string;
-    availableFrom?: string;
-    availableUntil?: string;
+    dueDate: string;
+    points: number;
+    availableFromDate: string;
+    availableUntilDate: string;
+    type: "QUIZ" | "ASSIGNMENT" | "EXAM";
 }
 
-export const findAssignmentsForCourse = async (courseId: string) => {
-    const response = await axios.get(`${API_BASE}${API_PREFIX}/courses/${courseId}/assignments`);
-    return response.data;
+export const findAllAssignments = async () => {
+    const { data } = await axiosWithCredentials.get(ASSIGNMENTS_API);
+    return data;
 };
 
 export const findAssignmentById = async (assignmentId: string) => {
-    const response = await axios.get(`${API_BASE}${API_PREFIX}/assignments/${assignmentId}`);
-    return response.data;
+    const { data } = await axiosWithCredentials.get(`${ASSIGNMENTS_API}/${assignmentId}`);
+    return data;
 };
 
-export const createAssignment = async (courseId: string, assignment: Partial<Assignment>) => {
-    const response = await axios.post(`${API_BASE}${API_PREFIX}/courses/${courseId}/assignments`, assignment);
-    return response.data;
+export const findAssignmentsForCourse = async (courseId: string) => {
+    const { data } = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/courses/${courseId}/assignments`);
+    return data;
 };
 
-export const updateAssignment = async (assignmentId: string, assignment: Partial<Assignment>) => {
-    const response = await axios.put(`${API_BASE}${API_PREFIX}/assignments/${assignmentId}`, assignment);
-    return response.data;
+export const createAssignment = async (assignment: Assignment) => {
+    const { data } = await axiosWithCredentials.post(ASSIGNMENTS_API, assignment);
+    return data;
+};
+
+export const updateAssignment = async (assignment: Assignment) => {
+    const { data } = await axiosWithCredentials.put(`${ASSIGNMENTS_API}/${assignment._id}`, assignment);
+    return data;
 };
 
 export const deleteAssignment = async (assignmentId: string) => {
-    const response = await axios.delete(`${API_BASE}${API_PREFIX}/assignments/${assignmentId}`);
-    return response.data;
+    const { data } = await axiosWithCredentials.delete(`${ASSIGNMENTS_API}/${assignmentId}`);
+    return data;
 }; 
