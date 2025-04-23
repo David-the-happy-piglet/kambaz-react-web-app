@@ -41,7 +41,7 @@ export default function TOC() {
             </Nav.Item>
 
             <Nav.Item>
-                <Nav.Link href="https://github.com/David-the-happy-piglet/kambaz-react-web-app/tree/a5">Github Repository - frontend</Nav.Link>
+                <Nav.Link href="https://github.com/David-the-happy-piglet/kambaz-react-web-app/tree/a6">Github Repository - frontend</Nav.Link>
                 <Nav.Link href="https://github.com/David-the-happy-piglet/kambaz-node-server-app">Github Repository - server</Nav.Link>
             </Nav.Item>
         </Nav>
